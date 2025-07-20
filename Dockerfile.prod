@@ -1,0 +1,35 @@
+# ----------- Builder Stage -----------
+FROM node:18 AS builder
+
+WORKDIR /app
+
+# Install dependencies
+COPY package*.json ./
+COPY prisma ./prisma
+RUN npm install
+
+# Copy the rest of the codebase (including src/, tsconfig, etc.)
+COPY . .
+
+# ✅ Generate Prisma client (outputs to src/generated/prisma)
+RUN npx prisma generate
+
+# ✅ Build TypeScript project
+RUN npm run build
+
+# ✅ Move generated Prisma client into dist/
+RUN mkdir -p dist/generated/prisma
+RUN cp -r src/generated/prisma/* dist/generated/prisma/
+
+# ----------- Production Stage -----------
+FROM node:18 AS prod
+
+WORKDIR /app
+
+# Copy only necessary files from builder
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
+
+# Start app
+CMD ["node", "dist/index.js"]
