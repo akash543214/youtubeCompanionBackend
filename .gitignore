@@ -15,31 +15,8 @@ node_modules/
 bower_components/
 jspm_packages/
 
-# Build outputs
-dist/
-build/
-.cache/
-.next/
-.nuxt/
-.vuepress/dist
-.serverless/
 
-# TypeScript outputs (if applicable)
-*.tsbuildinfo
 
-# Coverage
-coverage/
-.nyc_output/
-
-# Misc
-lib-cov/
-.grunt/
-.lock-wscript
-typings/
-*.tgz
-.yarn-integrity
-.eslintcache
-.node_repl_history
 
 # Prisma (do NOT ignore generated client!)
 # ❌ Do not add: /src/generated/prisma

@@ -1,0 +1,24 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const task_controller_1 = require("../controllers/task.controller");
+const auth_middleware_1 = require("../middlewares/auth.middleware");
+const task_schema_1 = require("../schemas/task.schema");
+const task_schema_2 = require("../schemas/task.schema");
+const createValidationMiddleware_1 = require("../utils/createValidationMiddleware");
+const validateTaskData = (0, createValidationMiddleware_1.createValidationMiddleware)(task_schema_1.CreateTaskSchema);
+const validateUpdateTaskData = (0, createValidationMiddleware_1.createValidationMiddleware)(task_schema_2.UpdateTaskSchema);
+const router = (0, express_1.Router)();
+router.route('/top-level-tasks/:projectId').get(auth_middleware_1.verifyJWT, task_controller_1.getTopLevelTasks);
+router.route('/tasks-with-firstlevel-subtaks/:projectId').get(auth_middleware_1.verifyJWT, task_controller_1.getTopTasksWithChildren);
+router.route('/tasks-with-allsubtasks/:projectId').get(auth_middleware_1.verifyJWT, task_controller_1.getTasksWithAllSubtasks);
+router.route('/get-task/:taskId').get(auth_middleware_1.verifyJWT, task_controller_1.getTaskById);
+router.route('/allsubtasks/:taskId').get(auth_middleware_1.verifyJWT, task_controller_1.getAllSubtasks);
+router.route('/get-firstlevel-tasks/:taskId').get(auth_middleware_1.verifyJWT, task_controller_1.getFirstLevelSubtasks);
+router.route('/delete-task/:taskId').delete(auth_middleware_1.verifyJWT, task_controller_1.deleteTask);
+router.route('/update-task/:taskId').patch(auth_middleware_1.verifyJWT, validateUpdateTaskData, task_controller_1.updateTask);
+router.route('/create-task/:projectId').post(auth_middleware_1.verifyJWT, validateTaskData, task_controller_1.createTask);
+router.route('/generate-task').post(auth_middleware_1.verifyJWT, task_controller_1.generateTask);
+router.route('/overview').get(auth_middleware_1.verifyJWT, task_controller_1.overView);
+exports.default = router;
+//# sourceMappingURL=task.routes.js.map
